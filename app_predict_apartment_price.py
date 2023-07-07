@@ -2,7 +2,6 @@ import pandas as pd
 import math
 import xgboost as xgb
 import streamlit as st
-from sklearn.preprocessing import StandardScaler
 
 from name_project import name_project
 from latitude import latitude
@@ -58,6 +57,7 @@ def main():
         </style>
     """
     st.markdown(hide_spinner_style, unsafe_allow_html=True)
+    st.markdown("You can search for information about the estate project on Google or on the website [Batdongsan](https://batdongsan.com.vn/du-an-bat-dong-san)")
 
     # Get the Area input from the user
     area = st.number_input("Area", format="%.2f", min_value=0.0, step=0.01, value=0.0)
@@ -250,34 +250,35 @@ def main():
     st.write("Entered number banks:", number_banks)
 
     # Prediction
-    data_new = pd.DataFrame({
-        'area': area,
-        'house_direct_encoded': house_direct_encoder,
-        'balcony_direct_encoded': balcony_direct_encoder,
-        'n_rooms': number_bedrooms,
-        'n_toilets': number_toilets,
-        'polistic_encoded': polistic_encoder,
-        'furniture_encoded': furniture_encoder,
-        'name_project_encoded': name_project_encoder,
-        'project_apartment_number': project_apartment_number,
-        'project_building_number': project_building_number,
-        'district_encoded': district_encoder,
-        'min_price_of_project': min_price_of_the_project,
-        'max_price_of_project': max_price_of_the_project,
-        'min_area_of_project': min_area_of_the_project,
-        'max_area_of_project': max_area_of_the_project,
-        'x': latitude_of_project,
-        'y': longtitude_of_project,
-        'distance': distance_to_UBND,
-        'n_hospitals': number_hospitals,
-        'n_schools': number_schools,
-        'n_banks': number_banks
-    }, index=[0])
-    scaler = StandardScaler()
-    scaler_data_new = scaler.fit_transform(data_new)
+    new_data = {
+        'area': [area],
+        'house_direct_encoded': [house_direct_encoder],
+        'balcony_direct_encoded': [balcony_direct_encoder],
+        'n_rooms': [number_bedrooms],
+        'n_toilets': [number_toilets],
+        'polistic_encoded': [polistic_encoder],
+        'furniture_encoded': [furniture_encoder],
+        'name_project_encoded': [name_project_encoder],
+        'project_apartment_number': [project_apartment_number],
+        'project_building_number': [project_building_number],
+        'district_encoded': [district_encoder],
+        'min_price_of_project': [min_price_of_the_project],
+        'max_price_of_project': [max_price_of_the_project],
+        'min_area_of_project': [min_area_of_the_project],
+        'max_area_of_project': [max_area_of_the_project],
+        'x': [latitude_of_project],
+        'y': [longtitude_of_project],
+        'distance': [distance_to_UBND],
+        'n_hospitals': [number_hospitals],
+        'n_schools': [number_schools],
+        'n_banks': [number_banks]
+    }
+    # Create a DataFrame from the sample data
+    new_data = pd.DataFrame(new_data)
+
     try:
         if st.button('Predict'):
-            pred = model.predict(scaler_data_new)
+            pred = model.predict(new_data)
             if pred > 0:
                 st.balloons()
                 st.success("The apartment has price about {:.2f}".format(pred[0]))
