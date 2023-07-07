@@ -278,12 +278,15 @@ def main():
 
     try:
         if st.button('Predict'):
-            pred = model.predict(new_data)
-            if pred > 0:
-                st.balloons()
-                st.success("The apartment has price about {:.2f}".format(pred[0]))
+            if new_data['area'][0] == 0:
+                st.warning("Something went wrong, please try again!")
             else:
-                st.warning("You can't able to predict this apartment")
+                pred = model.predict(new_data)
+                if pred > 0:
+                    st.balloons()
+                    st.success("The apartment has price about {:.2f}".format(pred[0]))
+                else:
+                    st.warning("You can't able to predict this apartment")
     except:
         st.warning("Something went wrong, please try again!")
 
