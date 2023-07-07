@@ -84,6 +84,23 @@ def main():
          # Display the entered
         st.write("Entered balcony direct:", balcony_direct)
     balcony_direct_encoder = direct.index(house_direct)
+
+    # Get the Number Bedrooms input from the user
+    number_bedrooms = st.number_input("Number bedrooms", min_value=0, step=1, value=0)
+    # Validate if the number is positive
+    if number_bedrooms < 0:
+        st.error("Please enter a positive number.")
+    # Display the entered number
+    st.write("Entered number bedrooms:", number_bedrooms)
+
+    # Get the Number Toilets input from the user
+    number_toilets = st.number_input("Number toilets", min_value=0, step=1, value=0)
+    # Validate if the number is positive
+    if number_toilets < 0:
+        st.error("Please enter a positive number.")
+    # Display the entered number
+    st.write("Entered number toilets:", number_toilets)
+    
     col3, col4 = st.columns(2)
     with col3:
         polistic = st.radio(
@@ -115,21 +132,6 @@ def main():
         furniture_encoder = 0
     if furniture == 'Nguyên bản':
         furniture_encoder = 3
-    # Get the Number Bedrooms input from the user
-    number_bedrooms = st.number_input("Number bedrooms", min_value=0, step=1, value=0)
-    # Validate if the number is positive
-    if number_bedrooms < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered number bedrooms:", number_bedrooms)
-
-    # Get the Number Toilets input from the user
-    number_toilets = st.number_input("Number toilets", min_value=0, step=1, value=0)
-    # Validate if the number is positive
-    if number_toilets < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered number toilets:", number_toilets)
 
     project = st.selectbox('Name project', name_project)
     # Display the entered number
