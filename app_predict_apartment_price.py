@@ -2,6 +2,7 @@ import pandas as pd
 import math
 import xgboost as xgb
 import streamlit as st
+import streamlit.components.v1 as components
 
 from name_project import name_project
 from latitude import latitude
@@ -35,7 +36,7 @@ def main():
     name_project_encoder = 0
     html_temp="""
         <div style="background-color: lightblue; padding: 16px;">
-            <h2 style="color:black; text-align: center;">The Apartment Price Prediction Web</h2>
+            <h2 style="color:black; text-align: center; width: 41.5rem;">The Apartment Price Prediction Web</h2>
         </div>
     """
     st.markdown(html_temp, unsafe_allow_html=True)
@@ -57,7 +58,8 @@ def main():
         </style>
     """
     st.markdown(hide_spinner_style, unsafe_allow_html=True)
-    st.markdown("You can search for information about the estate project on Google or on the website [Batdongsan](https://batdongsan.com.vn/du-an-bat-dong-san)")
+    st.markdown("You can search for information about the estate project on Google or below here")
+    components.iframe("https://app.powerbi.com/reportEmbed?reportId=76705c19-bc63-4366-8431-112bba4fd8be&autoAuth=true&ctid=06f1b89f-07e8-464f-b408-ec1b45703f31", height=400, width=704)
 
     # Get the Area input from the user
     area = st.number_input("Area", format="%.2f", min_value=0.0, step=0.01, value=0.0)
@@ -85,24 +87,26 @@ def main():
         st.write("Entered balcony direct:", balcony_direct)
     balcony_direct_encoder = direct.index(house_direct)
 
-    # Get the Number Bedrooms input from the user
-    number_bedrooms = st.number_input("Number bedrooms", min_value=0, step=1, value=0)
-    # Validate if the number is positive
-    if number_bedrooms < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered number bedrooms:", number_bedrooms)
-
-    # Get the Number Toilets input from the user
-    number_toilets = st.number_input("Number toilets", min_value=0, step=1, value=0)
-    # Validate if the number is positive
-    if number_toilets < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered number toilets:", number_toilets)
-    
     col3, col4 = st.columns(2)
     with col3:
+        # Get the Number Bedrooms input from the user
+        number_bedrooms = st.number_input("Number bedrooms", min_value=0, step=1, value=0)
+        # Validate if the number is positive
+        if number_bedrooms < 0:
+            st.error("Please enter a positive number.")
+        # Display the entered number
+        st.write("Entered number bedrooms:", number_bedrooms)
+    with col4:
+        # Get the Number Toilets input from the user
+        number_toilets = st.number_input("Number toilets", min_value=0, step=1, value=0)
+        # Validate if the number is positive
+        if number_toilets < 0:
+            st.error("Please enter a positive number.")
+        # Display the entered number
+        st.write("Entered number toilets:", number_toilets)
+    
+    col5, col6 = st.columns(2)
+    with col5:
         polistic = st.radio(
             "Polistic",
             options=polistic_value
@@ -117,7 +121,7 @@ def main():
         polistic_encoder = 1
     if polistic == 'Chưa sổ':
         polistic_encoder = 0
-    with col4:
+    with col6:
         furniture = st.radio(
             "Furniture",
             options=furniture_value
@@ -156,21 +160,23 @@ def main():
     longtitude_of_project = longtitude[name_project_encoder]
     distance_to_UBND = take_length(latitude_of_project, longtitude_of_project)
 
-    # Get the Number apartment of the project input from the user
-    project_apartment_number = st.number_input("Number apartment of the project", min_value=0, step=1, value=0)
-    # Validate if the number is positive
-    if project_apartment_number < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered number apartment of the project:", project_apartment_number)
-
-    # Get the Number building of the project input from the user
-    project_building_number = st.number_input("Number building of the project", min_value=0, step=1, value=0)
-    # Validate if the number is positive
-    if project_building_number < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered number building of the project:", project_building_number)
+    col7, col8 = st.columns(2)
+    with col7:
+        # Get the Number apartment of the project input from the user
+        project_apartment_number = st.number_input("Number apartment of the project", min_value=0, step=1, value=0)
+        # Validate if the number is positive
+        if project_apartment_number < 0:
+            st.error("Please enter a positive number.")
+        # Display the entered number
+        st.write("Entered number apartment of the project:", project_apartment_number)
+    with col8:
+        # Get the Number building of the project input from the user
+        project_building_number = st.number_input("Number building of the project", min_value=0, step=1, value=0)
+        # Validate if the number is positive
+        if project_building_number < 0:
+            st.error("Please enter a positive number.")
+        # Display the entered number
+        st.write("Entered number building of the project:", project_building_number)
 
     city = st.radio("Choose the city", options=name_city)
     if city == 'Hà Nội':
@@ -188,66 +194,71 @@ def main():
          # Display the entered
         st.write("Entered district:", district)
     district_encoder = all_district.index(district)
-    
-    # Get the Min price of the project input from the user
-    min_price_of_the_project = st.number_input("Min price of the project", format="%.2f", min_value=0.0, step=0.01, value=0.0)
-    # Validate if the number is positive
-    if min_price_of_the_project < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered min price of the project:", round(min_price_of_the_project, 2))
 
-    # Get the Max price of the project input from the user
-    max_price_of_the_project = st.number_input("Max price of the project", format="%.2f", min_value=0.0, step=0.01, value=0.0)
-    # Validate if the number is positive
-    if max_price_of_the_project < 0:
-        st.error("Please enter a positive number.")
-    if 0 < max_price_of_the_project < min_price_of_the_project:
-        st.error("Max price of the project must be greater than min price of the project")
-    # Display the entered number
-    st.write("Entered max price of the project:", round(max_price_of_the_project, 2))
+    col9, col10 = st.columns(2)
+    with col9:
+        # Get the Min price of the project input from the user
+        min_price_of_the_project = st.number_input("Min price of the project", format="%.2f", min_value=0.0, step=0.01, value=0.0)
+        # Validate if the number is positive
+        if min_price_of_the_project < 0:
+            st.error("Please enter a positive number.")
+        # Display the entered number
+        st.write("Entered min price of the project:", round(min_price_of_the_project, 2))
+    with col10:
+        # Get the Max price of the project input from the user
+        max_price_of_the_project = st.number_input("Max price of the project", format="%.2f", min_value=0.0, step=0.01, value=0.0)
+        # Validate if the number is positive
+        if max_price_of_the_project < 0:
+            st.error("Please enter a positive number.")
+        if 0 < max_price_of_the_project < min_price_of_the_project:
+            st.error("Max price of the project must be greater than min price of the project")
+        # Display the entered number
+        st.write("Entered max price of the project:", round(max_price_of_the_project, 2))
 
-    # Get the Min area of the project input from the user
-    min_area_of_the_project = st.number_input("Min area of the project", format="%.2f", min_value=0.0, step=0.01, value=0.0)
-    # Validate if the number is positive
-    if min_area_of_the_project < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered min area of the project:", round(min_area_of_the_project, 2))
-
-    # Get the Max area of the project input from the user
-    max_area_of_the_project = st.number_input("Max area of the project", format="%.2f", min_value=0.0, step=0.01, value=0.0)
-    # Validate if the number is positive
-    if max_area_of_the_project < 0:
-        st.error("Please enter a positive number.")
-    if 0 < max_area_of_the_project < min_area_of_the_project:
-        st.error("Max area of the project must be greater than min area of the project")
-    # Display the entered number
-    st.write("Entered max area of the project:", round(max_area_of_the_project, 2))
-
-    # Get the Number Bedrooms input from the user
-    number_hospitals = st.number_input("Number of hospitals around 1 km", min_value=0, step=1, value=0)
-    # Validate if the number is positive
-    if number_hospitals < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered number hospitals:", number_hospitals)
-
-    # Get the Number Bedrooms input from the user
-    number_schools = st.number_input("Number of schools around 1 km", min_value=0, step=1, value=0)
-    # Validate if the number is positive
-    if number_schools < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered number schools:", number_schools)
-
-    # Get the Number Bedrooms input from the user
-    number_banks = st.number_input("Number of banks around 1 km", min_value=0, step=1, value=0)
-    # Validate if the number is positive
-    if number_banks < 0:
-        st.error("Please enter a positive number.")
-    # Display the entered number
-    st.write("Entered number banks:", number_banks)
+    col11, col12 = st.columns(2)
+    with col11:
+        # Get the Min area of the project input from the user
+        min_area_of_the_project = st.number_input("Min area of the project", format="%.2f", min_value=0.0, step=0.01, value=0.0)
+        # Validate if the number is positive
+        if min_area_of_the_project < 0:
+            st.error("Please enter a positive number.")
+        # Display the entered number
+        st.write("Entered min area of the project:", round(min_area_of_the_project, 2))
+    with col12:
+        # Get the Max area of the project input from the user
+        max_area_of_the_project = st.number_input("Max area of the project", format="%.2f", min_value=0.0, step=0.01, value=0.0)
+        # Validate if the number is positive
+        if max_area_of_the_project < 0:
+            st.error("Please enter a positive number.")
+        if 0 < max_area_of_the_project < min_area_of_the_project:
+            st.error("Max area of the project must be greater than min area of the project")
+        # Display the entered number
+        st.write("Entered max area of the project:", round(max_area_of_the_project, 2))
+    col13, col14, col15 = st.columns(3)
+    with col13:
+        # Get the Number Hospitals input from the user
+        number_hospitals = st.number_input("Number of hospitals around 1 km", min_value=0, step=1, value=0)
+        # Validate if the number is positive
+        if number_hospitals < 0:
+            st.error("Please enter a positive number.")
+        # Display the entered number
+        st.write("Entered number hospitals:", number_hospitals)
+    with col14:
+        # Get the Number Schools input from the user
+        number_schools = st.number_input("Number of schools around 1 km", min_value=0, step=1, value=0)
+        # Validate if the number is positive
+        if number_schools < 0:
+            st.error("Please enter a positive number.")
+        # Display the entered number
+        st.write("Entered number schools:", number_schools)
+    with col15:
+        # Get the Number Banks input from the user
+        number_banks = st.number_input("Number of banks around 1 km", min_value=0, step=1, value=0)
+        # Validate if the number is positive
+        if number_banks < 0:
+            st.error("Please enter a positive number.")
+        # Display the entered number
+        st.write("Entered number banks:", number_banks)
 
     # Prediction
     new_data = {
